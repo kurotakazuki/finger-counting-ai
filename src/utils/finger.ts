@@ -2,9 +2,7 @@ import { NormalizedLandmarkList, NormalizedLandmark } from "@mediapipe/hands";
 
 // Finger Type
 export const FingerTypes = {
-  REPEAT: "repeat",
   // Numbers
-  ZERO: "zero",
   ONE: "one",
   TWO: "two",
   THREE: "three",
@@ -14,11 +12,23 @@ export const FingerTypes = {
   SEVEN: "seven",
   EIGHT: "eight",
   NINE: "nine",
+  // others
+  REST: "rest",
+  REPEAT: "repeat",
 } as const;
 export type FingerType = typeof FingerTypes[keyof typeof FingerTypes];
 export const AllFingerType = Object.values(FingerTypes);
 
-function calcAngle(
+export const getPitch = (fingerType: FingerType): number | null => {
+  for (let index = 8; 0 <= index; index--) {
+    if (AllFingerType[index] === fingerType) {
+      return index;
+    }
+  }
+  return null;
+};
+
+export function calcAngle(
   p0: NormalizedLandmark,
   p1: NormalizedLandmark,
   p2: NormalizedLandmark
@@ -175,5 +185,5 @@ export const detectFingerPose = (
   ) {
     return FingerTypes.ONE;
   }
-  return FingerTypes.ZERO;
+  return FingerTypes.REST;
 };
